@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: FlashcardsApp
+  profiles:
+    active: default
+  banner:
+    location: classpath:logo-app
+  h2:
+    console:
+      path: /h2-console
+  datasource:
+    url: jdbc:h2:file:./db/words
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
