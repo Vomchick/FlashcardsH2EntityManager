@@ -1,6 +1,8 @@
 package org.flashcards.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.util.Objects;
@@ -8,9 +10,8 @@ import java.util.Objects;
 @Entity
 public class Word {
 
-    private static Long idCounter = 1L;
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String polish;
     private String english;
@@ -43,7 +44,6 @@ public class Word {
     }
 
     public Word(String polish, String english, String german) {
-        this.id = idCounter++;
         this.polish = polish;
         this.english = english;
         this.german = german;
