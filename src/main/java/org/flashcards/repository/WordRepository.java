@@ -23,15 +23,6 @@ public class WordRepository implements IRepository {
 
     @Transactional
     public void addWord(Word word) {
-        var words = getAll();
-
-        if (words.isEmpty()) {
-            word.setId(1L);
-        }
-        else{
-            word.setId(words.getLast().getId()+1);
-        }
-
         entityManager.persist(word);
     }
 

@@ -4,22 +4,31 @@ import org.flashcards.data.Language;
 import org.flashcards.data.Order;
 import org.flashcards.model.Word;
 import org.flashcards.repository.core.IRepository;
-import org.flashcards.service.core.IFileService;
+import org.flashcards.service.core.IWordService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FileService implements IFileService {
+public class WordService implements IWordService {
     private IRepository repo;
 
-    public FileService(IRepository repo) {
+    public WordService(IRepository repo) {
         this.repo = repo;
     }
 
     @Override
     public void addWord(Word word) {
+        var words = getAll();
+
+        if (words.isEmpty()) {
+            word.setId(1L);
+        }
+        else{
+            word.setId(words.getLast().getId()+1);
+        }
+
         repo.addWord(word);
     }
 
