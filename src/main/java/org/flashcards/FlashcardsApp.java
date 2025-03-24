@@ -1,7 +1,7 @@
 package org.flashcards;
 
 import org.flashcards.controller.FlashcardsController;
-import org.flashcards.service.FileService;
+import org.flashcards.service.WordService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -14,10 +14,10 @@ public class FlashcardsApp {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(FlashcardsApp.class, args);
         FlashcardsController controller = context.getBean(FlashcardsController.class);
-        FileService fileService = context.getBean(FileService.class);
+        WordService wordService = context.getBean(WordService.class);
         Scanner scanner = context.getBean(Scanner.class);
 
-        fileService.initialize();
+        wordService.initialize();
 
         while (true) {
             System.out.println("\n1. Show all words");

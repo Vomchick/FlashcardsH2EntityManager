@@ -4,23 +4,22 @@ import org.flashcards.controller.core.IController;
 import org.flashcards.data.Language;
 import org.flashcards.data.Order;
 import org.flashcards.model.Word;
-import org.flashcards.service.core.IFileService;
+import org.flashcards.service.core.IWordService;
 import org.flashcards.service.core.ITextFormatter;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 @Controller
 public class FlashcardsController implements IController {
-    private final IFileService fileService;
+    private final IWordService wordService;
     private final ITextFormatter textFormatter;
     private final Scanner scanner;
 
-    public FlashcardsController(IFileService fileService, ITextFormatter textFormatter, Scanner scanner) {
-        this.fileService = fileService;
+    public FlashcardsController(IWordService wordService, ITextFormatter textFormatter, Scanner scanner) {
+        this.wordService = wordService;
         this.textFormatter = textFormatter;
         this.scanner = scanner;
     }
@@ -36,13 +35,13 @@ public class FlashcardsController implements IController {
         if (parts.length == 3) {
             Word newWord = new Word(parts[0], parts[1], parts[2]);
 
-            for (Word word : fileService.getAll()) {
+            for (Word word : wordService.getAll()) {
                 if (word.equals(newWord)) {
                     System.out.println("\nThe word is already in the dictionary.");
                     return;
                 }
             }
-            fileService.addWord(newWord);
+            wordService.addWord(newWord);
             System.out.println("\nWord added!");
         } else {
             System.err.println("\nIncorrect input format.");
@@ -50,7 +49,7 @@ public class FlashcardsController implements IController {
     }
 
     public void displayAllWords() {
-        List<Word> entries = fileService.getAll();
+        List<Word> entries = wordService.getAll();
         displayWords(entries);
     }
 
@@ -66,7 +65,7 @@ public class FlashcardsController implements IController {
             order = scanner.nextInt();
         }
 
-        List<Word> words = fileService.getSortedBy(Language.valueOfLabel(language), Order.valueOfLabel(order));
+        List<Word> words = wordService.getSortedBy(Language.valueOfLabel(language), Order.valueOfLabel(order));
         displayWords(words);
     }
 
@@ -76,7 +75,7 @@ public class FlashcardsController implements IController {
         String searchedWord = scanner.next();
         scanner.nextLine();
 
-        var retrievedWords = fileService.search(searchedWord);
+        var retrievedWords = wordService.search(searchedWord);
         if (retrievedWords.isEmpty()) {
             System.out.println("Word not found!");
         }
@@ -101,13 +100,13 @@ public class FlashcardsController implements IController {
             searchedWord.setEnglish(parts[1]);
             searchedWord.setGerman(parts[2]);
 
-            for (Word word : fileService.getAll()) {
+            for (Word word : wordService.getAll()) {
                 if (word.equals(searchedWord)) {
                     System.out.println("\nThe word is already in the dictionary.");
                     return;
                 }
             }
-            fileService.updateWord(searchedWord);
+            wordService.updateWord(searchedWord);
         }
         else {
             System.out.println("\nWord not found.");
@@ -119,7 +118,7 @@ public class FlashcardsController implements IController {
     public void deleteWord() {
         var searchedWord = getOneWord();
 
-        fileService.deleteById(searchedWord.getId());
+        wordService.deleteById(searchedWord.getId());
     }
 
     private int getLanguage() {
@@ -135,7 +134,7 @@ public class FlashcardsController implements IController {
     }
 
     public void startTest() {
-        List<Word> entries = fileService.getAll();
+        List<Word> entries = wordService.getAll();
         if (entries.isEmpty()) {
             System.out.println("\nThere are no words for the test.");
             return;
@@ -199,7 +198,7 @@ public class FlashcardsController implements IController {
             System.out.println("\nEnter searched word");
             String searchedWord = scanner.next();
             scanner.nextLine();
-            retrievedWords = fileService.search(searchedWord);
+            retrievedWords = wordService.search(searchedWord);
             displayWords(retrievedWords);
             if(retrievedWords.size() != 1) {
                 System.out.println("Too many words found, adjust your request");
