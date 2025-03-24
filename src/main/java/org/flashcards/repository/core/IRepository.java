@@ -1,11 +1,9 @@
 package org.flashcards.repository.core;
 
-import org.flashcards.data.Language;
 import org.flashcards.model.Word;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IRepository extends CrudRepository<Word, Long> {
 //    void addWord(Word word);
@@ -16,4 +14,11 @@ public interface IRepository extends CrudRepository<Word, Long> {
 //    List<Word> getSortedByDesc(Language language);
 //    List<Word> getSortedByAsc(Language language);
 //    Optional<Word> getByLanguage(String word, Language language);
+    List<Word> findAllByOrderByPolishAsc();
+    List<Word> findAllByOrderByEnglishAsc();
+    List<Word> findAllByOrderByGermanAsc();
+    List<Word> findAllByOrderByPolishDesc();
+    List<Word> findAllByOrderByEnglishDesc();
+    List<Word> findAllByOrderByGermanDesc();
+    List<Word> findAllByEnglishContainingIgnoreCaseOrGermanContainingIgnoreCaseOrPolishContainingIgnoreCase(String str,String str2,String str3);
 }

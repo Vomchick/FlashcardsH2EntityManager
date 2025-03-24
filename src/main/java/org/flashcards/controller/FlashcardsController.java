@@ -119,6 +119,7 @@ public class FlashcardsController implements IController {
         var searchedWord = getOneWord();
 
         wordService.deleteById(searchedWord.getId());
+        System.out.println("\nWord deleted!");
     }
 
     private int getLanguage() {
@@ -210,7 +211,7 @@ public class FlashcardsController implements IController {
     }
 
     private void displayWords(List<Word> words) {
-        if (words.isEmpty()) {
+        if (words == null || words.isEmpty()) {
             System.out.println("\nThe dictionary is empty.");
             return;
         }
