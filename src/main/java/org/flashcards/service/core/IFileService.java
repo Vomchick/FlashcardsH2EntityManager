@@ -15,5 +15,5 @@ public interface IFileService {
     Optional<Word> getById(Long id);
     List<Word> getSortedBy(Language language, Order order);
     void initialize();
-    Optional<Word> getByLanguage(String word, Language language);
+    List<Word> search(String str);
 }

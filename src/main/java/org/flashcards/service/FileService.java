@@ -5,10 +5,8 @@ import org.flashcards.data.Order;
 import org.flashcards.model.Word;
 import org.flashcards.repository.core.IRepository;
 import org.flashcards.service.core.IFileService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,7 +65,7 @@ public class FileService implements IFileService {
     }
 
     @Override
-    public Optional<Word> getByLanguage(String word, Language language) {
-        return repo.getByLanguage(word, language);
+    public List<Word> search(String str) {
+        return repo.search(str);
     }
 }

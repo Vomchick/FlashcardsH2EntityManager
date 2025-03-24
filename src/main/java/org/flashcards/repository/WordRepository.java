@@ -23,6 +23,15 @@ public class WordRepository implements IRepository {
 
     @Transactional
     public void addWord(Word word) {
+        var words = getAll();
+
+        if (words.isEmpty()) {
+            word.setId(1L);
+        }
+        else{
+            word.setId(words.getLast().getId()+1);
+        }
+
         entityManager.persist(word);
     }
 
@@ -64,22 +73,12 @@ public class WordRepository implements IRepository {
         };
     }
 
-    public Optional<Word> getByLanguage(String word, Language language) {
-        try {
-            return switch (language) {
-                case English ->
-                        Optional.ofNullable(entityManager.createQuery("from Word where english =:word", Word.class)
-                                .setParameter("word", word).getSingleResult());
-                case Polish ->
-                        Optional.ofNullable(entityManager.createQuery("from Word where polish =:word", Word.class)
-                                .setParameter("word", word).getSingleResult());
-                case German ->
-                        Optional.ofNullable(entityManager.createQuery("from Word where german =:word", Word.class)
-                                .setParameter("word", word).getSingleResult());
-            };
-        }
-        catch (NoResultException e) {
-            return Optional.empty();
-        }
+    public List<Word> search(String str) {
+        String query = "select w from Word w where " +
+                "lower(w.polish) like lower(:str) or " +
+                "lower(w.english) like lower(:str) or " +
+                "lower(w.german) like lower(:str)";
+
+        return entityManager.createQuery(query, Word.class).setParameter("str", "%" + str + "%").getResultList();
     }
 }

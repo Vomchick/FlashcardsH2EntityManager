@@ -72,78 +72,54 @@ public class FlashcardsController implements IController {
 
     @Override
     public void searchWord() {
-        int language = getLanguage();
-
         System.out.println("\nEnter word");
         String searchedWord = scanner.next();
         scanner.nextLine();
 
-        var retrievedWord = fileService.getByLanguage(searchedWord, Language.valueOfLabel(language));
-        if (retrievedWord.isPresent()) {
-            displayWords(new ArrayList<>(){
-                {
-                    add(retrievedWord.get());
-                }
-            });
+        var retrievedWords = fileService.search(searchedWord);
+        if (retrievedWords.isEmpty()) {
+            System.out.println("Word not found!");
         }
         else {
-            System.out.println("Word not found!");
+            displayWords(retrievedWords);
         }
     }
 
     @Override
     public void updateWord() {
-        int language = getLanguage();
+        var searchedWord = getOneWord();
 
-        System.out.println("\nEnter word");
-        String searchedWord = scanner.next();
-        scanner.nextLine();
+        System.out.print("\nEnter updated word (Polish, English, German separated by commas): ");
+        String[] parts = scanner.nextLine().split(",");
 
-        var retrievedWord = fileService.getByLanguage(searchedWord, Language.valueOfLabel(language));
-        if (retrievedWord.isPresent()){
-            System.out.print("\nEnter the word (Polish, English, German separated by commas): ");
-            String[] parts = scanner.nextLine().split(",");
-
-            for (int i = 0; i < parts.length; i++) {
-                parts[i] = parts[i].trim();
-            }
-
-            if (parts.length == 3) {
-                var updatedWord = retrievedWord.get();
-                updatedWord.setPolish(parts[0]);
-                updatedWord.setEnglish(parts[1]);
-                updatedWord.setGerman(parts[2]);
-
-                for (Word word : fileService.getAll()) {
-                    if (word.equals(updatedWord)) {
-                        System.out.println("\nThe word is already in the dictionary.");
-                        return;
-                    }
-                }
-                fileService.updateWord(updatedWord);
-            }
-            else {
-                System.out.println("\nWord not found.");
-            }
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].trim();
         }
+
+        if (parts.length == 3) {
+            searchedWord.setPolish(parts[0]);
+            searchedWord.setEnglish(parts[1]);
+            searchedWord.setGerman(parts[2]);
+
+            for (Word word : fileService.getAll()) {
+                if (word.equals(searchedWord)) {
+                    System.out.println("\nThe word is already in the dictionary.");
+                    return;
+                }
+            }
+            fileService.updateWord(searchedWord);
+        }
+        else {
+            System.out.println("\nWord not found.");
+        }
+
     }
 
     @Override
     public void deleteWord() {
-        int language = getLanguage();
+        var searchedWord = getOneWord();
 
-        System.out.println("\nEnter word");
-        String searchedWord = scanner.next();
-        scanner.nextLine();
-
-        var retrievedWord = fileService.getByLanguage(searchedWord, Language.valueOfLabel(language));
-        if (retrievedWord.isPresent()) {
-            fileService.deleteById(retrievedWord.get().getId());
-            System.out.println("\nWord deleted!");
-        }
-        else {
-            System.out.println("\nWord not found!");
-        }
+        fileService.deleteById(searchedWord.getId());
     }
 
     private int getLanguage() {
@@ -214,6 +190,24 @@ public class FlashcardsController implements IController {
             }
             default -> throw new IllegalStateException();
         }
+    }
+
+    private Word getOneWord(){
+        List<Word> retrievedWords = null;
+
+        do {
+            System.out.println("\nEnter searched word");
+            String searchedWord = scanner.next();
+            scanner.nextLine();
+            retrievedWords = fileService.search(searchedWord);
+            displayWords(retrievedWords);
+            if(retrievedWords.size() != 1) {
+                System.out.println("Too many words found, adjust your request");
+            }
+
+        } while (retrievedWords.size() != 1);
+
+        return retrievedWords.getFirst();
     }
 
     private void displayWords(List<Word> words) {

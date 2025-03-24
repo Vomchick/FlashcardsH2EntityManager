@@ -11,7 +11,6 @@ import java.util.Objects;
 public class Word {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String polish;
     private String english;
@@ -68,5 +67,9 @@ public class Word {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
