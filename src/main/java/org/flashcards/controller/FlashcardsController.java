@@ -107,6 +107,7 @@ public class FlashcardsController implements IController {
                 }
             }
             wordService.updateWord(searchedWord);
+            System.out.println("\nWord updated!");
         }
         else {
             System.out.println("\nWord not found.");
