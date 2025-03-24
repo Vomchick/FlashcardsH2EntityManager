@@ -107,6 +107,7 @@ public class FlashcardsController implements IController {
                 }
             }
             wordService.updateWord(searchedWord);
+            System.out.println("\nWord updated!");
         }
         else {
             System.out.println("\nWord not found.");
@@ -119,6 +120,7 @@ public class FlashcardsController implements IController {
         var searchedWord = getOneWord();
 
         wordService.deleteById(searchedWord.getId());
+        System.out.println("\nWord deleted!");
     }
 
     private int getLanguage() {

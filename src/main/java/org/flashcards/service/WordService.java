@@ -66,11 +66,11 @@ public class WordService implements IWordService {
             return;
         }
 
-        repo.addWord(new Word("kot", "cat", "katze"));
-        repo.addWord(new Word("pies", "dog", "hund"));
-        repo.addWord(new Word("dom", "house", "haus"));
-        repo.addWord(new Word("drzewo", "tree", "baum"));
-        repo.addWord(new Word("samochód", "car", "auto"));
+        addWord(new Word("kot", "cat", "katze"));
+        addWord(new Word("pies", "dog", "hund"));
+        addWord(new Word("dom", "house", "haus"));
+        addWord(new Word("drzewo", "tree", "baum"));
+        addWord(new Word("samochód", "car", "auto"));
     }
 
     @Override
