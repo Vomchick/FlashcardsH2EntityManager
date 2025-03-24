@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,12 +23,14 @@ public class FileService implements IFileService {
 
     @Override
     public void addWord(Word word) {
-        repo.addWord(word);
+        repo.save(word);
     }
 
     @Override
     public List<Word> getAll() {
-        return repo.getAll();
+        var words = new ArrayList<Word>();
+        repo.findAll().forEach(words::add);
+        return words;
     }
 
     @Override
@@ -37,12 +40,12 @@ public class FileService implements IFileService {
 
     @Override
     public void updateWord(Word word) {
-        repo.updateWord(word);
+        repo.update
     }
 
     @Override
     public Optional<Word> getById(Long id) {
-        return repo.getById(id);
+        return repo.findById(id);
     }
 
     @Override
@@ -55,15 +58,15 @@ public class FileService implements IFileService {
 
     @Override
     public void initialize() {
-        if(!repo.getAll().isEmpty()) {
+        if(!repo.findAll().iterator().hasNext()) {
             return;
         }
 
-        repo.addWord(new Word("kot", "cat", "katze"));
-        repo.addWord(new Word("pies", "dog", "hund"));
-        repo.addWord(new Word("dom", "house", "haus"));
-        repo.addWord(new Word("drzewo", "tree", "baum"));
-        repo.addWord(new Word("samochód", "car", "auto"));
+        repo.save(new Word("kot", "cat", "katze"));
+        repo.save(new Word("pies", "dog", "hund"));
+        repo.save(new Word("dom", "house", "haus"));
+        repo.save(new Word("drzewo", "tree", "baum"));
+        repo.save(new Word("samochód", "car", "auto"));
     }
 
     @Override
