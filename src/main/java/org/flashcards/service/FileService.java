@@ -65,4 +65,9 @@ public class FileService implements IFileService {
         repo.addWord(new Word("drzewo", "tree", "baum"));
         repo.addWord(new Word("samochód", "car", "auto"));
     }
+
+    @Override
+    public Optional<Word> getByLanguage(String word, Language language) {
+        return repo.getByLanguage(word, language);
+    }
 }

@@ -14,4 +14,5 @@ public interface IRepository {
     Optional<Word> getById(Long id);
     List<Word> getSortedByDesc(Language language);
     List<Word> getSortedByAsc(Language language);
+    Optional<Word> getByLanguage(String word, Language language);
 }

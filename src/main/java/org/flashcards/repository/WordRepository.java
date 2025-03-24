@@ -1,6 +1,7 @@
 package org.flashcards.repository;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import org.flashcards.data.Language;
 import org.flashcards.data.exceptions.WordNotFoundException;
 import org.flashcards.model.Word;
@@ -61,5 +62,24 @@ public class WordRepository implements IRepository {
             case Polish -> entityManager.createQuery("from Word order by polish asc ", Word.class).getResultList();
             case English -> entityManager.createQuery("from Word order by english asc ", Word.class).getResultList();
         };
+    }
+
+    public Optional<Word> getByLanguage(String word, Language language) {
+        try {
+            return switch (language) {
+                case English ->
+                        Optional.ofNullable(entityManager.createQuery("from Word where english =:word", Word.class)
+                                .setParameter("word", word).getSingleResult());
+                case Polish ->
+                        Optional.ofNullable(entityManager.createQuery("from Word where polish =:word", Word.class)
+                                .setParameter("word", word).getSingleResult());
+                case German ->
+                        Optional.ofNullable(entityManager.createQuery("from Word where german =:word", Word.class)
+                                .setParameter("word", word).getSingleResult());
+            };
+        }
+        catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

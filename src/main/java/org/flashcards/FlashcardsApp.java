@@ -22,19 +22,25 @@ public class FlashcardsApp {
         while (true) {
             System.out.println("\n1. Show all words");
             System.out.println("2. Show all sorted by...");
-            System.out.println("3. Add a word");
-            System.out.println("4. Start the test");
-            System.out.println("5. Exit");
+            System.out.println("3. Search word");
+            System.out.println("4. Add word");
+            System.out.println("5. Update word");
+            System.out.println("6. Delete word");
+            System.out.println("7. Start the test");
+            System.out.println("8. Exit");
             System.out.print("\nChoose an action: ");
             String choice = scanner.next();
             scanner.nextLine();
 
             switch (choice) {
-                case "1" -> controller.displayWords();
+                case "1" -> controller.displayAllWords();
                 case "2" -> controller.displaySortedWords();
-                case "3" -> controller.addWord();
-                case "4" -> controller.startTest();
-                case "5" -> System.exit(0);
+                case "3" -> controller.searchWord();
+                case "4" -> controller.addWord();
+                case "5" -> controller.updateWord();
+                case "6" -> controller.deleteWord();
+                case "7" -> controller.startTest();
+                case "8" -> System.exit(0);
                 default -> System.out.println("\nNot a valid choice!");
             }
         }

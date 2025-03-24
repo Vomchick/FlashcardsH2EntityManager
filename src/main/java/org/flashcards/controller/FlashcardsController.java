@@ -8,6 +8,7 @@ import org.flashcards.service.core.IFileService;
 import org.flashcards.service.core.ITextFormatter;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -48,21 +49,14 @@ public class FlashcardsController implements IController {
         }
     }
 
-    public void displayWords() {
+    public void displayAllWords() {
         List<Word> entries = fileService.getAll();
         displayWords(entries);
     }
 
     @Override
     public void displaySortedWords() {
-        var language = -1;
-        System.out.println("Which language?");
-        while(language != 1 && language != 2 && language != 3) {
-            System.out.println("1. Polish");
-            System.out.println("2. English");
-            System.out.println("3. German");
-            language = scanner.nextInt();
-        }
+        var language = getLanguage();
 
         var order = -1;
         System.out.println("What order?");
@@ -74,6 +68,94 @@ public class FlashcardsController implements IController {
 
         List<Word> words = fileService.getSortedBy(Language.valueOfLabel(language), Order.valueOfLabel(order));
         displayWords(words);
+    }
+
+    @Override
+    public void searchWord() {
+        int language = getLanguage();
+
+        System.out.println("\nEnter word");
+        String searchedWord = scanner.next();
+        scanner.nextLine();
+
+        var retrievedWord = fileService.getByLanguage(searchedWord, Language.valueOfLabel(language));
+        if (retrievedWord.isPresent()) {
+            displayWords(new ArrayList<>(){
+                {
+                    add(retrievedWord.get());
+                }
+            });
+        }
+        else {
+            System.out.println("Word not found!");
+        }
+    }
+
+    @Override
+    public void updateWord() {
+        int language = getLanguage();
+
+        System.out.println("\nEnter word");
+        String searchedWord = scanner.next();
+        scanner.nextLine();
+
+        var retrievedWord = fileService.getByLanguage(searchedWord, Language.valueOfLabel(language));
+        if (retrievedWord.isPresent()){
+            System.out.print("\nEnter the word (Polish, English, German separated by commas): ");
+            String[] parts = scanner.nextLine().split(",");
+
+            for (int i = 0; i < parts.length; i++) {
+                parts[i] = parts[i].trim();
+            }
+
+            if (parts.length == 3) {
+                var updatedWord = retrievedWord.get();
+                updatedWord.setPolish(parts[0]);
+                updatedWord.setEnglish(parts[1]);
+                updatedWord.setGerman(parts[2]);
+
+                for (Word word : fileService.getAll()) {
+                    if (word.equals(updatedWord)) {
+                        System.out.println("\nThe word is already in the dictionary.");
+                        return;
+                    }
+                }
+                fileService.updateWord(updatedWord);
+            }
+            else {
+                System.out.println("\nWord not found.");
+            }
+        }
+    }
+
+    @Override
+    public void deleteWord() {
+        int language = getLanguage();
+
+        System.out.println("\nEnter word");
+        String searchedWord = scanner.next();
+        scanner.nextLine();
+
+        var retrievedWord = fileService.getByLanguage(searchedWord, Language.valueOfLabel(language));
+        if (retrievedWord.isPresent()) {
+            fileService.deleteById(retrievedWord.get().getId());
+            System.out.println("\nWord deleted!");
+        }
+        else {
+            System.out.println("\nWord not found!");
+        }
+    }
+
+    private int getLanguage() {
+        var language = -1;
+        System.out.println("\nWhich language?");
+        while(language != 1 && language != 2 && language != 3) {
+            System.out.println("1. Polish");
+            System.out.println("2. English");
+            System.out.println("3. German");
+            language = scanner.nextInt();
+        }
+        return language;
     }
 
     public void startTest() {
